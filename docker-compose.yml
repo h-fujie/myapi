@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+  web:
+    image: nginx:1.27.0
+    container_name: web
+    ports:
+      - 80:80
+    networks:
+      - myapi_network
+  app:
+    build:
+      context: ./app
+    container_name: app
+    ports:
+      - 4848:4848
+      - 8080:8080
+    networks:
+      - myapi_network
+  db:
+    image: mysql:9.0.1
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqladmin
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqluser
+    volumes:
+      - mysql_volume:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    networks:
+      - myapi_network
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 18080:8080
+    networks:
+      - myapi_network
+    depends_on:
+      - db
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - 8000:8000
+      - 9443:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_volume:/data
+networks:
+  myapi_network:
+volumes:
+  portainer_volume:
+  mysql_volume:
