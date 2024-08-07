@@ -27,7 +27,7 @@ services:
       - MYSQL_PASSWORD=mysqluser
     volumes:
       - mysql_volume:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d
     networks:
       - myapi_network
   adminer:
