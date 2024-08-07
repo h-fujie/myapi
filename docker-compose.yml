@@ -31,7 +31,7 @@ services:
     networks:
       - myapi_network
   adminer:
-    image: adminer
+    image: adminer:latest
     container_name: adminer
     restart: always
     ports:
